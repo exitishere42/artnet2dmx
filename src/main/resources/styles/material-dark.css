@@ -1,0 +1,156 @@
+.root {
+    -fx-base: #121212;
+    -fx-background: #121212;
+    -fx-control-inner-background: #1E1E1E;
+    -fx-focus-color: #03DAC6;
+    -fx-faint-focus-color: transparent;
+    -fx-text-base-color: #E1E1E1;
+    -fx-font-family: "Segoe UI", "Ubuntu", sans-serif;
+}
+
+/* Text Fields */
+.text-field {
+    -fx-background-color: #1E1E1E;
+    -fx-text-fill: #E1E1E1;
+    -fx-prompt-text-fill: #616161;
+    -fx-highlight-fill: #03DAC6;
+    -fx-highlight-text-fill: #000000;
+    -fx-border-color: #2C2C2C;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-padding: 5px 8px;
+    -fx-font-size: 13px;
+}
+.text-field:focused {
+    -fx-border-color: #03DAC6;
+}
+
+/* Combo Box */
+.combo-box-base {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #2C2C2C;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-padding: 2px 4px;
+}
+.combo-box-base:focused {
+    -fx-border-color: #03DAC6;
+}
+.combo-box .list-cell {
+    -fx-text-fill: #E1E1E1;
+    -fx-background-color: #1E1E1E;
+    -fx-font-size: 13px;
+}
+.combo-box-popup .list-view {
+    -fx-background-color: #232323;
+    -fx-border-color: #2C2C2C;
+    -fx-border-width: 1px;
+}
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #272727;
+    -fx-text-fill: #03DAC6;
+}
+.combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #03DAC6;
+    -fx-text-fill: #000000;
+}
+.combo-box .arrow {
+    -fx-background-color: #9E9E9E;
+}
+
+/* Spinners */
+.spinner {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #2C2C2C;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+}
+.spinner:focused {
+    -fx-border-color: #03DAC6;
+}
+.spinner .text-field {
+    -fx-background-color: #1E1E1E;
+    -fx-border-width: 0;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: #232323;
+}
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-background-color: #272727;
+}
+.spinner .increment-arrow,
+.spinner .decrement-arrow {
+    -fx-background-color: #9E9E9E;
+}
+
+/* Horizontal ScrollBar */
+.scroll-bar:horizontal {
+    -fx-background-color: #1E1E1E;
+    -fx-pref-height: 10px;
+    -fx-border-color: transparent;
+}
+.scroll-bar:horizontal .track {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: transparent;
+}
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #272727;
+    -fx-background-radius: 5px;
+}
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #03DAC6;
+}
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-pref-width: 0;
+    -fx-padding: 0;
+    -fx-opacity: 0;
+}
+
+/* SplitPane & Drag Handle Pills */
+.split-pane {
+    -fx-background-color: transparent;
+    -fx-box-border: transparent;
+    -fx-padding: 0;
+}
+.split-pane:vertical > .split-pane-divider {
+    -fx-background-color: transparent;
+    -fx-padding: 6px 0 6px 0;
+    -fx-cursor: v-resize;
+    -fx-border-color: transparent;
+}
+.split-pane:vertical > .split-pane-divider > .vertical-grabber,
+.split-pane:vertical > .split-pane-divider > .grabber,
+.split-pane-divider .vertical-grabber,
+.split-pane-divider .grabber {
+    -fx-pref-width: 52px;
+    -fx-pref-height: 4px;
+    -fx-min-width: 52px;
+    -fx-min-height: 4px;
+    -fx-max-width: 52px;
+    -fx-max-height: 4px;
+    -fx-background-color: #8E8E8E;
+    -fx-background-radius: 2px;
+}
+.split-pane:vertical > .split-pane-divider:hover > .vertical-grabber,
+.split-pane:vertical > .split-pane-divider:hover > .grabber,
+.split-pane-divider:hover .vertical-grabber,
+.split-pane-divider:hover .grabber {
+    -fx-background-color: #00E5FF;
+}
+.split-pane:vertical > .split-pane-divider:pressed > .vertical-grabber,
+.split-pane:vertical > .split-pane-divider:pressed > .grabber,
+.split-pane-divider:pressed .vertical-grabber,
+.split-pane-divider:pressed .grabber {
+    -fx-background-color: #00ff9a;
+}
+
+

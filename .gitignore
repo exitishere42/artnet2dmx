@@ -1,0 +1,10 @@
+target/
+.idea/
+*.iml
+app.log*
+dependency-reduced-pom.xml
+config.json
+scratch/
+__pycache__/
+*.pyc
+old_artnet2dmx/

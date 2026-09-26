@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <!-- Material 2 Dark Theme Subtle Radial Gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#252525"/>
+      <stop offset="100%" stop-color="#181818"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Squircle Base (Material Dark Surface) -->
+  <rect x="12" y="12" width="232" height="232" rx="54" fill="url(#bgGrad)" stroke="#2C2C2C" stroke-width="4"/>
+
+  <!-- Subtle Inner Ring -->
+  <rect x="16" y="16" width="224" height="224" rx="50" fill="none" stroke="#03DAC6" stroke-width="1.5" stroke-opacity="0.2"/>
+
+  <!-- Lucide Sliders Icon (centered, scaled 6.8x) -->
+  <g transform="translate(46.4, 46.4) scale(6.8)" stroke="#03DAC6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <line x1="4" x2="4" y1="21" y2="14" />
+    <line x1="4" x2="4" y1="10" y2="3" />
+    <line x1="12" x2="12" y1="21" y2="12" />
+    <line x1="12" x2="12" y1="8" y2="3" />
+    <line x1="20" x2="20" y1="21" y2="16" />
+    <line x1="20" x2="20" y1="12" y2="3" />
+    <line x1="1" x2="7" y1="14" y2="14" />
+    <line x1="9" x2="15" y1="8" y2="8" />
+    <line x1="17" x2="23" y1="16" y2="16" />
+  </g>
+</svg>

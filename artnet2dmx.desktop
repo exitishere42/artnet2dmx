@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=artnet2dmx
+Comment=artnet2dmx - Art-Net to DMX Bridge
+Exec=/home/regie/artnet2dmx/run.sh --gui
+Icon=/home/regie/artnet2dmx/artnet2dmx.png
+Path=/home/regie/artnet2dmx
+Terminal=false
+Categories=AudioVideo;Utility;Lighting;
+StartupNotify=true
