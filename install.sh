@@ -10,7 +10,11 @@ set -e
 REPO="exitishere42/artnet2dmx"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/artnet2dmx}"
 APP_NAME="artnet2dmx"
-JAR_NAME="artnet2dmx-1.0.0-all.jar"
+JAR_NAME="artnet2dmx-1.0.1-all.jar"
+DETECTED_JAR=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" 2>/dev/null | grep -o '"name": *"artnet2dmx-[^"]*-all\.jar"' | head -n 1 | cut -d '"' -f 4 || true)
+if [ -n "$DETECTED_JAR" ]; then
+    JAR_NAME="$DETECTED_JAR"
+fi
 APPIMAGE_NAME="artnet2dmx-x86_64.AppImage"
 RELEASE_BASE_URL="https://github.com/$REPO/releases/latest/download"
 RAW_BASE_URL="https://raw.githubusercontent.com/$REPO/main"

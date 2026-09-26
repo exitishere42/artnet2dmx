@@ -3,10 +3,10 @@ set -e
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="/tmp/artnet2dmx-appimage"
-JAR_SRC="$PROJECT_DIR/target/artnet2dmx-1.0.0-all.jar"
+JAR_SRC=$(ls -t "$PROJECT_DIR"/target/artnet2dmx-*-all.jar 2>/dev/null | head -n 1)
 
-if [ ! -f "$JAR_SRC" ]; then
-    echo "[!] Fat JAR nicht gefunden unter $JAR_SRC. Bitte zuerst 'mvn package' ausführen."
+if [ -z "$JAR_SRC" ] || [ ! -f "$JAR_SRC" ]; then
+    echo "[!] Fat JAR nicht gefunden in target/. Bitte zuerst 'mvn package' ausführen."
     exit 1
 fi
 
@@ -15,7 +15,7 @@ mkdir -p "$BUILD_DIR/AppDir/usr/lib/artnet2dmx"
 mkdir -p "$BUILD_DIR/AppDir/usr/share/icons/hicolor/256x256/apps"
 mkdir -p "$BUILD_DIR/AppDir/usr/share/applications"
 
-cp "$JAR_SRC" "$BUILD_DIR/AppDir/usr/lib/artnet2dmx/artnet2dmx-1.0.0-all.jar"
+cp "$JAR_SRC" "$BUILD_DIR/AppDir/usr/lib/artnet2dmx/"
 cp "$PROJECT_DIR/artnet2dmx.png" "$BUILD_DIR/AppDir/artnet2dmx.png"
 cp "$PROJECT_DIR/artnet2dmx.png" "$BUILD_DIR/AppDir/.DirIcon"
 cp "$PROJECT_DIR/artnet2dmx.png" "$BUILD_DIR/AppDir/usr/share/icons/hicolor/256x256/apps/artnet2dmx.png"
@@ -37,7 +37,7 @@ cp "$BUILD_DIR/AppDir/artnet2dmx.desktop" "$BUILD_DIR/AppDir/usr/share/applicati
 cat > "$BUILD_DIR/AppDir/AppRun" << 'EOF'
 #!/usr/bin/env bash
 HERE="$(dirname "$(readlink -f "${0}")")"
-JAR_FILE="$HERE/usr/lib/artnet2dmx/artnet2dmx-1.0.0-all.jar"
+JAR_FILE=$(ls -t "$HERE"/usr/lib/artnet2dmx/artnet2dmx-*-all.jar 2>/dev/null | head -n 1)
 if ! command -v java &> /dev/null; then
     echo "[!] Fehler: Java 21+ (java) wurde nicht gefunden. Bitte openjdk-21-jre installieren." >&2
     exit 1
