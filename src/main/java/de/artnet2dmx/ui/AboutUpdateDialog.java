@@ -19,8 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.awt.Desktop;
-import java.net.URI;
+import de.artnet2dmx.ArtNet2DmxApp;
 import java.util.logging.Logger;
 
 /**
@@ -153,13 +152,7 @@ public class AboutUpdateDialog {
 
         MaterialButton btnGithub = new MaterialButton("GitHub", "external-link",
                 MaterialTheme.COLOR_SURFACE_4DP, MaterialTheme.COLOR_TEXT_HIGH, 12, 10, 4, 11, false, () -> {
-            try {
-                if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-                    Desktop.getDesktop().browse(URI.create(UpdateService.REPO_URL));
-                }
-            } catch (Exception e) {
-                LOGGER.warning("Konnte Browser nicht öffnen: " + e.getMessage());
-            }
+            ArtNet2DmxApp.openWebpage(UpdateService.REPO_URL);
         });
 
         footer.getChildren().add(btnGithub);
