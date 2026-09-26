@@ -3,26 +3,33 @@ setlocal EnableDelayedExpansion
 chcp 65001 >nul 2>&1
 
 set "INSTALL_DIR=%USERPROFILE%\artnet2dmx"
+set "SM_LNK=%APPDATA%\Microsoft\Windows\Start Menu\Programs\artnet2dmx.lnk"
 
 echo ==================================================================
 echo   artnet2dmx - Windows Uninstaller
 echo ==================================================================
 
 :: 1. Startmenue- und Desktop-Verknuepfungen loeschen
-echo [*] Entferne Startmenue- und Desktop-Verknuepfungen...
-powershell -NoProfile -Command ^
-    "$smPath = Join-Path $env:APPDATA 'Microsoft\Windows\Start Menu\Programs\artnet2dmx.lnk'; " ^
-    "$dtPath = Join-Path ([Environment]::GetFolderPath('Desktop')) 'artnet2dmx.lnk'; " ^
-    "if (Test-Path $smPath) { Remove-Item -Path $smPath -Force }; " ^
-    "if (Test-Path $dtPath) { Remove-Item -Path $dtPath -Force }"
+if exist "%SM_LNK%" (
+    echo [*] Entferne Startmenue-Eintrag...
+    del /f /q "%SM_LNK%"
+)
 
-:: 2. Programmordner loeschen (auch falls das Skript aus dem Ordner selbst gestartet wurde)
+for /f "usebackq tokens=*" %%d in (`powershell -NoProfile -Command "[Environment]::GetFolderPath('Desktop')"`) do (
+    if exist "%%d\artnet2dmx.lnk" (
+        echo [*] Entferne Desktop-Verknuepfung...
+        del /f /q "%%d\artnet2dmx.lnk"
+    )
+)
+
+:: 2. Programmordner %USERPROFILE%\artnet2dmx loeschen
 if exist "%INSTALL_DIR%" (
     echo [*] Loesche Programmordner: %INSTALL_DIR%
-    cd /d "%USERPROFILE%"
-    rmdir /s /q "%INSTALL_DIR%" 2>nul
+    :: Falls das Skript direkt aus %INSTALL_DIR% gestartet wurde, kurz nach %TEMP% wechseln
+    cd /d "%TEMP%"
+    rmdir /s /q "%INSTALL_DIR%"
 ) else (
-    echo [i] Programmordner %INSTALL_DIR% war bereits geloescht.
+    echo [i] Programmordner %INSTALL_DIR% wurde bereits entfernt.
 )
 
 echo ==================================================================
