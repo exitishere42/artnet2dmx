@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 public class UpdateService {
     private static final Logger LOGGER = Logger.getLogger(UpdateService.class.getName());
 
-    public static final String CURRENT_VERSION = "1.0.5";
+    public static final String CURRENT_VERSION = "1.1.0";
     public static final String GITHUB_REPO = "exitishere42/artnet2dmx";
     public static final String API_URL = "https://api.github.com/repos/" + GITHUB_REPO + "/releases/latest";
     public static final String REPO_URL = "https://github.com/" + GITHUB_REPO;
@@ -234,14 +234,14 @@ public class UpdateService {
                 } else {
                     // Windows: Durch Dateisperre des laufenden Prozesses Helper-Batch nutzen
                     statusCallback.accept("Bereite Neustart vor...");
+                    String runningJar = (codeSource != null && codeSource.isFile()) ? codeSource.getName() : "artnet2dmx-*.jar";
                     File updateBat = new File(installDir, "update-runner.bat");
                     String batContent = "@echo off\r\n" +
                             "chcp 65001 >nul 2>&1\r\n" +
                             "timeout /t 1 /nobreak >nul\r\n" +
                             ":wait\r\n" +
                             "del \"%~dp0artnet2dmx-*-all.jar\" >nul 2>&1\r\n" +
-                            "del \"%~dp0artnet2dmx-1.0.0-all.jar\" >nul 2>&1\r\n" +
-                            "if exist \"%~dp0artnet2dmx-1.0.0-all.jar\" (\r\n" +
+                            "if exist \"%~dp0" + runningJar + "\" (\r\n" +
                             "    timeout /t 1 /nobreak >nul\r\n" +
                             "    goto wait\r\n" +
                             ")\r\n" +

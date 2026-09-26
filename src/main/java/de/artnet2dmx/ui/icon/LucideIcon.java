@@ -161,6 +161,22 @@ public class LucideIcon extends Canvas {
                 gc.strokeLine(6 * scale, 6 * scale, 18 * scale, 18 * scale);
                 gc.strokeLine(18 * scale, 6 * scale, 6 * scale, 18 * scale);
             }
+            case "settings", "gear" -> {
+                gc.strokeOval(8.5 * scale, 8.5 * scale, 7 * scale, 7 * scale);
+                for (int i = 0; i < 8; i++) {
+                    double angle = i * Math.PI / 4.0;
+                    double x1 = 12 * scale + Math.cos(angle) * 7.0 * scale;
+                    double y1 = 12 * scale + Math.sin(angle) * 7.0 * scale;
+                    double x2 = 12 * scale + Math.cos(angle) * 10.5 * scale;
+                    double y2 = 12 * scale + Math.sin(angle) * 10.5 * scale;
+                    gc.strokeLine(x1, y1, x2, y2);
+                }
+            }
+            case "globe" -> {
+                gc.strokeOval(2 * scale, 2 * scale, 20 * scale, 20 * scale);
+                gc.strokeLine(2 * scale, 12 * scale, 22 * scale, 12 * scale);
+                gc.strokeArc(6.5 * scale, 2 * scale, 11 * scale, 20 * scale, 0, 360, ArcType.OPEN);
+            }
             default -> {
                 // Fallback Circle
                 gc.strokeOval(4 * scale, 4 * scale, 16 * scale, 16 * scale);

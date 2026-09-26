@@ -7,7 +7,7 @@
 
     <groupId>de.artnet2dmx</groupId>
     <artifactId>artnet2dmx</artifactId>
-    <version>1.0.5</version>
+    <version>1.1.0</version>
     <packaging>jar</packaging>
 
     <name>artnet2dmx</name>

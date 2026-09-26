@@ -6,6 +6,7 @@ import de.artnet2dmx.config.ConfigManager;
 import de.artnet2dmx.dmx.*;
 import de.artnet2dmx.ui.component.*;
 import de.artnet2dmx.ui.icon.LucideIcon;
+import de.artnet2dmx.util.I18n;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -64,6 +65,8 @@ public class MainWindow extends StackPane {
 
     public MainWindow() {
         this.config = ConfigManager.loadConfig();
+        I18n.setLanguage(config.getLanguage());
+        I18n.addListener(lang -> Platform.runLater(this::updateTexts));
 
         contentBox.setStyle("-fx-background-color: " + MaterialTheme.HEX_BG + ";");
         contentBox.setSpacing(0);
@@ -190,7 +193,7 @@ public class MainWindow extends StackPane {
 
         logoBox.getChildren().addAll(iconLogo, title, versionBadge);
         logoBox.setOnMouseClicked(e -> AboutUpdateDialog.show(MainWindow.this));
-        MaterialTooltip.install(logoBox, "artnet2dmx", "Klicken für Versionsinformationen & automatische Updates");
+        MaterialTooltip.install(logoBox, "artnet2dmx", I18n.get("tooltip.logo"));
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -202,7 +205,7 @@ public class MainWindow extends StackPane {
         chip.setStyle("-fx-background-color: " + MaterialTheme.HEX_SURFACE_4DP + "; -fx-background-radius: 12px;");
 
         chipIcon = new LucideIcon("circle", 10, MaterialTheme.COLOR_TEXT_MED);
-        chipLabel = new Label("BEREIT");
+        chipLabel = new Label(I18n.get("status.ready"));
         chipLabel.setTextFill(MaterialTheme.COLOR_TEXT_MED);
         chipLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 11));
         chip.getChildren().addAll(chipIcon, chipLabel);
@@ -374,7 +377,7 @@ public class MainWindow extends StackPane {
         VBox boxAction = createControlBox("AKTION", "Bridge-Aktivierung",
             "Startet oder stoppt den DMX-Ausgabedienst:\n\n• Start: Verbindet mit DMX-Adapter und leitet Art-Net live weiter\n• Stop: Hält DMX-Ausgabe an und trennt die Schnittstelle sicher");
         boxAction.setMinWidth(110);
-        btnAction = new MaterialButton("Start", "play", 
+        btnAction = new MaterialButton(I18n.get("btn.start"), "play", 
             MaterialTheme.COLOR_PRIMARY, MaterialTheme.COLOR_ON_PRIMARY, 15, 16, 4, 12, true, this::toggleService);
         btnAction.setMaxWidth(Double.MAX_VALUE);
         VBox.setVgrow(btnAction, Priority.ALWAYS);
@@ -464,9 +467,9 @@ public class MainWindow extends StackPane {
             bridgeService.start(config);
             isRunning = true;
 
-            btnAction.setState("Stop", "square", MaterialTheme.COLOR_ERROR, MaterialTheme.COLOR_ON_ERROR);
+            btnAction.setState(I18n.get("btn.stop"), "square", MaterialTheme.COLOR_ERROR, MaterialTheme.COLOR_ON_ERROR);
             chipIcon.setIcon("circle-dot", MaterialTheme.COLOR_PRIMARY);
-            chipLabel.setText("AKTIV");
+            chipLabel.setText(I18n.get("status.active"));
             chipLabel.setTextFill(MaterialTheme.COLOR_PRIMARY);
             lblDriver.setText(config.getDriver());
             statusLabel.setText("Lauscht auf UDP " + config.getUdpPort() + " | Universum: " + 
@@ -485,9 +488,9 @@ public class MainWindow extends StackPane {
         isRunning = false;
         bridgeService.stop();
 
-        btnAction.setState("Start", "play", MaterialTheme.COLOR_PRIMARY, MaterialTheme.COLOR_ON_PRIMARY);
+        btnAction.setState(I18n.get("btn.start"), "play", MaterialTheme.COLOR_PRIMARY, MaterialTheme.COLOR_ON_PRIMARY);
         chipIcon.setIcon("circle", MaterialTheme.COLOR_TEXT_MED);
-        chipLabel.setText("BEREIT");
+        chipLabel.setText(I18n.get("status.ready"));
         chipLabel.setTextFill(MaterialTheme.COLOR_TEXT_MED);
         lblPps.setText("0.0 pkt/s");
         lblFps.setText("0.0 fps");
@@ -552,6 +555,19 @@ public class MainWindow extends StackPane {
                     fps,
                     bridgeService.getFramesSent()
                 ));
+            }
+        }
+    }
+
+    private void updateTexts() {
+        if (chipLabel != null) {
+            chipLabel.setText(isRunning ? I18n.get("status.active") : I18n.get("status.ready"));
+        }
+        if (btnAction != null) {
+            if (isRunning) {
+                btnAction.setState(I18n.get("btn.stop"), "square", MaterialTheme.COLOR_ERROR, MaterialTheme.COLOR_ON_ERROR);
+            } else {
+                btnAction.setState(I18n.get("btn.start"), "play", MaterialTheme.COLOR_PRIMARY, MaterialTheme.COLOR_ON_PRIMARY);
             }
         }
     }

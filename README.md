@@ -145,11 +145,11 @@ mvn clean test
 ```bash
 mvn clean package
 ```
-The standalone fat JAR will be created at `target/artnet2dmx-1.0.0-all.jar`.
+The standalone fat JAR will be created at `target/artnet2dmx-1.1.0-all.jar`.
 
 ### Headless CLI Mode (No GUI)
 ```bash
-java -jar target/artnet2dmx-1.0.0-all.jar --cli --driver jna-ftdi --universe 0 --fps 35
+java -jar target/artnet2dmx-1.1.0-all.jar --cli --driver jna-ftdi --universe 0 --fps 35
 ```
 
 ---

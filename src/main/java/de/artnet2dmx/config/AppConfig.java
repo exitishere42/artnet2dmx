@@ -18,6 +18,7 @@ public class AppConfig {
 
     private boolean dummy = false;
     private boolean autostart = false;
+    private String language = "de";
 
     public AppConfig() {}
 
@@ -99,5 +100,13 @@ public class AppConfig {
 
     public void setAutostart(boolean autostart) {
         this.autostart = autostart;
+    }
+
+    public String getLanguage() {
+        return language != null ? language : "de";
+    }
+
+    public void setLanguage(String language) {
+        this.language = language != null ? language : "de";
     }
 }
