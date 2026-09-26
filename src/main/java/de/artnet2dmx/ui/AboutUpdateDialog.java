@@ -7,12 +7,10 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -20,40 +18,28 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.awt.Desktop;
-import java.io.InputStream;
 import java.net.URI;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Dialog für Versionsinformationen und automatische In-App-Updates.
+ * In-App Modal Dialog für Versionsinformationen und automatische Updates.
+ * Erscheint direkt als zentriertes Overlay im Hauptfenster (kein separates OS-Fenster).
  */
 public class AboutUpdateDialog {
     private static final Logger LOGGER = Logger.getLogger(AboutUpdateDialog.class.getName());
 
-    public static void show(Window owner) {
-        Stage dialog = new Stage();
-        dialog.initOwner(owner);
-        dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.setTitle("Über artnet2dmx & Updates");
-        dialog.setResizable(false);
-
-        try (InputStream iconStream = AboutUpdateDialog.class.getResourceAsStream("/icons/artnet2dmx.png")) {
-            if (iconStream != null) {
-                dialog.getIcons().add(new Image(iconStream));
-            }
-        } catch (Exception ignored) {
-        }
-
-        VBox root = new VBox(12);
-        root.setPadding(new Insets(16));
-        root.setStyle("-fx-background-color: " + MaterialTheme.HEX_BG + ";");
-        root.setPrefWidth(460);
+    public static void show(MainWindow mainWindow) {
+        VBox card = new VBox(12);
+        card.setPadding(new Insets(16));
+        card.setStyle("-fx-background-color: " + MaterialTheme.HEX_SURFACE_1DP + 
+                     "; -fx-border-color: " + MaterialTheme.HEX_DIVIDER + 
+                     "; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-border-radius: 8px;" +
+                     "-fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.75), 24, 0, 0, 8);");
+        card.setPrefWidth(460);
+        card.setMaxWidth(460);
+        card.setMaxHeight(Region.USE_PREF_SIZE);
 
         // 1. Header (Logo, Titel, Schließen)
         HBox header = new HBox(10);
@@ -76,7 +62,7 @@ public class AboutUpdateDialog {
 
         LucideIcon iconClose = new LucideIcon("x", 16, MaterialTheme.COLOR_TEXT_MED);
         iconClose.setCursor(Cursor.HAND);
-        iconClose.setOnMouseClicked(e -> dialog.close());
+        iconClose.setOnMouseClicked(e -> mainWindow.hideOverlay());
 
         header.getChildren().addAll(iconLogo, titleBox, headerSpacer, iconClose);
 
@@ -178,19 +164,11 @@ public class AboutUpdateDialog {
         HBox.setHgrow(footerSpacer, Priority.ALWAYS);
 
         MaterialButton btnClose = new MaterialButton("Schließen", "x",
-                MaterialTheme.COLOR_SURFACE_4DP, MaterialTheme.COLOR_TEXT_HIGH, 12, 12, 4, 11, false, dialog::close);
+                MaterialTheme.COLOR_SURFACE_4DP, MaterialTheme.COLOR_TEXT_HIGH, 12, 12, 4, 11, false, mainWindow::hideOverlay);
 
         footer.getChildren().addAll(btnGithub, footerSpacer, btnClose);
 
-        root.getChildren().addAll(header, versionCard, statusCard, footer);
-
-        Scene scene = new Scene(root);
-        try {
-            scene.getStylesheets().add(AboutUpdateDialog.class.getResource("/styles/material-dark.css").toExternalForm());
-        } catch (Exception ignored) {
-        }
-
-        dialog.setScene(scene);
+        card.getChildren().addAll(header, versionCard, statusCard, footer);
 
         // Update-Prüfung ausführen
         Runnable[] checkUpdateTask = new Runnable[1];
@@ -283,8 +261,7 @@ public class AboutUpdateDialog {
             });
         };
 
-        // Klick auf "Erneut prüfen"
-        dialog.setOnShown(e -> checkUpdateTask[0].run());
-        dialog.show();
+        mainWindow.showOverlay(card);
+        checkUpdateTask[0].run();
     }
 }

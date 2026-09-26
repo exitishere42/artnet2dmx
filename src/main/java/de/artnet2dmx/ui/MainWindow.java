@@ -25,10 +25,12 @@ import java.util.logging.Logger;
  * Hauptansicht der artnet2dmx Anwendung im Material Design 2 Dark Theme.
  * 1:1 identisches Layout zur Python-Referenz.
  */
-public class MainWindow extends VBox {
+public class MainWindow extends StackPane {
     private static final Logger LOGGER = Logger.getLogger(MainWindow.class.getName());
 
     private final AppConfig config;
+    private final VBox contentBox = new VBox();
+    private final StackPane overlayPane = new StackPane();
 
     // Top Bar
     private LucideIcon chipIcon;
@@ -63,9 +65,9 @@ public class MainWindow extends VBox {
     public MainWindow() {
         this.config = ConfigManager.loadConfig();
 
-        setStyle("-fx-background-color: " + MaterialTheme.HEX_BG + ";");
-        setSpacing(0);
-        setPadding(new Insets(0, 0, 4, 0));
+        contentBox.setStyle("-fx-background-color: " + MaterialTheme.HEX_BG + ";");
+        contentBox.setSpacing(0);
+        contentBox.setPadding(new Insets(0, 0, 4, 0));
 
         buildTopAppBar();
 
@@ -90,11 +92,53 @@ public class MainWindow extends VBox {
 
         Platform.runLater(() -> splitPane.setDividerPositions(0.22, 0.405));
 
-        getChildren().add(splitPane);
+        contentBox.getChildren().add(splitPane);
         buildStatusBar();
+
+        // In-App Modal Overlay Layer
+        overlayPane.setVisible(false);
+        overlayPane.setManaged(false);
+        overlayPane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.65);");
+        overlayPane.setAlignment(Pos.CENTER);
+        overlayPane.setOnMouseClicked(e -> {
+            if (e.getTarget() == overlayPane) {
+                hideOverlay();
+            }
+        });
+
+        getChildren().addAll(contentBox, overlayPane);
 
         if (config.getPort() == null || config.getPort().equalsIgnoreCase("Auto-Detect")) {
             scanPorts();
+        }
+    }
+
+    public void showOverlay(Node modalContent) {
+        overlayPane.getChildren().setAll(modalContent);
+        overlayPane.setVisible(true);
+        overlayPane.setManaged(true);
+        modalContent.setOpacity(0);
+        javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(javafx.util.Duration.millis(160), modalContent);
+        ft.setFromValue(0);
+        ft.setToValue(1);
+        ft.play();
+    }
+
+    public void hideOverlay() {
+        if (!overlayPane.getChildren().isEmpty()) {
+            Node modalContent = overlayPane.getChildren().get(0);
+            javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(javafx.util.Duration.millis(120), modalContent);
+            ft.setFromValue(1);
+            ft.setToValue(0);
+            ft.setOnFinished(e -> {
+                overlayPane.getChildren().clear();
+                overlayPane.setVisible(false);
+                overlayPane.setManaged(false);
+            });
+            ft.play();
+        } else {
+            overlayPane.setVisible(false);
+            overlayPane.setManaged(false);
         }
     }
 
@@ -145,7 +189,7 @@ public class MainWindow extends VBox {
                              "; -fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 2px 6px; -fx-background-radius: 8px;");
 
         logoBox.getChildren().addAll(iconLogo, title, versionBadge);
-        logoBox.setOnMouseClicked(e -> AboutUpdateDialog.show(getScene().getWindow()));
+        logoBox.setOnMouseClicked(e -> AboutUpdateDialog.show(MainWindow.this));
         MaterialTooltip.install(logoBox, "artnet2dmx", "Klicken für Versionsinformationen & automatische Updates");
 
         Region spacer = new Region();
@@ -164,7 +208,7 @@ public class MainWindow extends VBox {
         chip.getChildren().addAll(chipIcon, chipLabel);
 
         bar.getChildren().addAll(logoBox, spacer, chip);
-        getChildren().add(bar);
+        contentBox.getChildren().add(bar);
     }
 
     private Region buildMetricsCard() {
@@ -381,7 +425,7 @@ public class MainWindow extends VBox {
         statusLabel.setFont(Font.font("Segoe UI", 11));
 
         bar.getChildren().add(statusLabel);
-        getChildren().add(bar);
+        contentBox.getChildren().add(bar);
     }
 
     private void scanPorts() {
