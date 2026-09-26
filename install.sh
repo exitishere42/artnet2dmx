@@ -106,7 +106,12 @@ cat > "$INSTALL_DIR/run.sh" << 'EOF'
 #!/usr/bin/env bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
-exec java -jar "$SCRIPT_DIR/artnet2dmx-1.0.0-all.jar" "$@"
+JAR_FILE=$(ls -t "$SCRIPT_DIR"/artnet2dmx-*-all.jar "$SCRIPT_DIR"/artnet2dmx.jar 2>/dev/null | head -n 1)
+if [ -z "$JAR_FILE" ]; then
+    echo "[!] Keine artnet2dmx JAR gefunden in $SCRIPT_DIR" >&2
+    exit 1
+fi
+exec java -jar "$JAR_FILE" "$@"
 EOF
 chmod +x "$INSTALL_DIR/run.sh"
 

@@ -61,6 +61,10 @@ if not exist "%INSTALL_DIR%\%JAR_NAME%" (
 (
 echo @echo off
 echo cd /d "%%~dp0"
+echo for /f "delims=" %%%%f in ^('dir /b /o:-d "%%~dp0artnet2dmx-*-all.jar" "%%~dp0artnet2dmx.jar" 2^^^>nul'^) do ^(
+echo     start "" javaw -jar "%%~dp0%%%%f" %%*
+echo     exit /b 0
+echo ^)
 echo start "" javaw -jar "%%~dp0%JAR_NAME%" %%*
 ) > "%INSTALL_DIR%\run.bat"
 

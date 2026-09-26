@@ -110,6 +110,57 @@ public class LucideIcon extends Canvas {
                 gc.strokeLine(12 * scale, 12.5 * scale, 12 * scale, 14.5 * scale);
                 gc.fillOval(11.2 * scale, 16.5 * scale, 1.6 * scale, 1.6 * scale);
             }
+            case "check-circle", "check" -> {
+                // Lucide check-circle: Kreis + Haekchen
+                gc.strokeOval(3 * scale, 3 * scale, 18 * scale, 18 * scale);
+                gc.strokeLine(8 * scale, 12 * scale, 11 * scale, 15 * scale);
+                gc.strokeLine(11 * scale, 15 * scale, 16 * scale, 9 * scale);
+            }
+            case "arrow-up-circle", "upload-cloud" -> {
+                // Lucide arrow-up-circle
+                gc.strokeOval(3 * scale, 3 * scale, 18 * scale, 18 * scale);
+                gc.strokeLine(12 * scale, 16 * scale, 12 * scale, 8 * scale);
+                gc.strokeLine(8 * scale, 12 * scale, 12 * scale, 8 * scale);
+                gc.strokeLine(16 * scale, 12 * scale, 12 * scale, 8 * scale);
+            }
+            case "download" -> {
+                // Lucide download: Pfeil nach unten + Schale
+                gc.strokeLine(12 * scale, 4 * scale, 12 * scale, 14 * scale);
+                gc.strokeLine(8 * scale, 10 * scale, 12 * scale, 14 * scale);
+                gc.strokeLine(16 * scale, 10 * scale, 12 * scale, 14 * scale);
+                gc.strokeLine(5 * scale, 16 * scale, 5 * scale, 19 * scale);
+                gc.strokeLine(5 * scale, 19 * scale, 19 * scale, 19 * scale);
+                gc.strokeLine(19 * scale, 19 * scale, 19 * scale, 16 * scale);
+            }
+            case "alert-triangle" -> {
+                // Lucide alert-triangle: Dreieck + Ausrufezeichen
+                double[] tx = {12 * scale, 22 * scale, 2 * scale};
+                double[] ty = {3 * scale, 20 * scale, 20 * scale};
+                gc.strokePolygon(tx, ty, 3);
+                gc.strokeLine(12 * scale, 9 * scale, 12 * scale, 14 * scale);
+                gc.fillOval(11.2 * scale, 16.5 * scale, 1.6 * scale, 1.6 * scale);
+            }
+            case "info" -> {
+                // Lucide info: Kreis + i
+                gc.strokeOval(3 * scale, 3 * scale, 18 * scale, 18 * scale);
+                gc.fillOval(11.2 * scale, 7.5 * scale, 1.6 * scale, 1.6 * scale);
+                gc.strokeLine(12 * scale, 11 * scale, 12 * scale, 16.5 * scale);
+            }
+            case "external-link" -> {
+                // Lucide external-link
+                gc.strokeLine(18 * scale, 13 * scale, 18 * scale, 19 * scale);
+                gc.strokeLine(18 * scale, 19 * scale, 5 * scale, 19 * scale);
+                gc.strokeLine(5 * scale, 19 * scale, 5 * scale, 6 * scale);
+                gc.strokeLine(5 * scale, 6 * scale, 11 * scale, 6 * scale);
+                gc.strokeLine(14 * scale, 4 * scale, 20 * scale, 4 * scale);
+                gc.strokeLine(20 * scale, 4 * scale, 20 * scale, 10 * scale);
+                gc.strokeLine(10 * scale, 14 * scale, 20 * scale, 4 * scale);
+            }
+            case "x" -> {
+                // Lucide x
+                gc.strokeLine(6 * scale, 6 * scale, 18 * scale, 18 * scale);
+                gc.strokeLine(18 * scale, 6 * scale, 6 * scale, 18 * scale);
+            }
             default -> {
                 // Fallback Circle
                 gc.strokeOval(4 * scale, 4 * scale, 16 * scale, 16 * scale);

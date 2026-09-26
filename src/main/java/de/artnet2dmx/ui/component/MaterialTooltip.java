@@ -23,6 +23,11 @@ public class MaterialTooltip {
     private static Node activeNode = null;
     private static PauseTransition hideTimer = null;
 
+    public static void install(Node node, String title, String text) {
+        node.setOnMouseEntered(e -> show(node, title, text));
+        node.setOnMouseExited(e -> scheduleHide());
+    }
+
     public static void show(Node node, String title, String text) {
         cancelHide();
         if (currentPopup != null && activeNode == node && currentPopup.isShowing()) {

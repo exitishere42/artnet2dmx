@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -123,11 +124,29 @@ public class MainWindow extends VBox {
                      "; -fx-border-color: " + MaterialTheme.HEX_DIVIDER + 
                      "; -fx-border-width: 0 0 1px 0;");
 
+        // Klickbarer Logo- & Versionsbereich für Info & Updates
+        HBox logoBox = new HBox(8);
+        logoBox.setAlignment(Pos.CENTER_LEFT);
+        logoBox.setCursor(Cursor.HAND);
+        logoBox.setPadding(new Insets(3, 8, 3, 6));
+        logoBox.setStyle("-fx-background-radius: 6px; -fx-background-color: transparent;");
+        logoBox.setOnMouseEntered(e -> logoBox.setStyle("-fx-background-radius: 6px; -fx-background-color: " + MaterialTheme.HEX_SURFACE_4DP + ";"));
+        logoBox.setOnMouseExited(e -> logoBox.setStyle("-fx-background-radius: 6px; -fx-background-color: transparent;"));
+
         LucideIcon iconLogo = new LucideIcon("sliders", 20, MaterialTheme.COLOR_PRIMARY);
 
         Label title = new Label("artnet2dmx");
         title.setTextFill(MaterialTheme.COLOR_TEXT_HIGH);
         title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 15));
+
+        Label versionBadge = new Label("v" + de.artnet2dmx.service.UpdateService.CURRENT_VERSION);
+        versionBadge.setStyle("-fx-background-color: " + MaterialTheme.HEX_SURFACE_4DP + 
+                             "; -fx-text-fill: " + MaterialTheme.HEX_TEXT_MED + 
+                             "; -fx-font-size: 10px; -fx-font-weight: bold; -fx-padding: 2px 6px; -fx-background-radius: 8px;");
+
+        logoBox.getChildren().addAll(iconLogo, title, versionBadge);
+        logoBox.setOnMouseClicked(e -> AboutUpdateDialog.show(getScene().getWindow()));
+        MaterialTooltip.install(logoBox, "artnet2dmx", "Klicken für Versionsinformationen & automatische Updates");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -144,7 +163,7 @@ public class MainWindow extends VBox {
         chipLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 11));
         chip.getChildren().addAll(chipIcon, chipLabel);
 
-        bar.getChildren().addAll(iconLogo, title, spacer, chip);
+        bar.getChildren().addAll(logoBox, spacer, chip);
         getChildren().add(bar);
     }
 
