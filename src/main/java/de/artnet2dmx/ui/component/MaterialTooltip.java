@@ -24,7 +24,11 @@ public class MaterialTooltip {
     private static PauseTransition hideTimer = null;
 
     public static void install(Node node, String title, String text) {
-        node.setOnMouseEntered(e -> show(node, title, text));
+        install(node, () -> title, () -> text);
+    }
+
+    public static void install(Node node, java.util.function.Supplier<String> titleSupplier, java.util.function.Supplier<String> textSupplier) {
+        node.setOnMouseEntered(e -> show(node, titleSupplier != null ? titleSupplier.get() : "", textSupplier != null ? textSupplier.get() : ""));
         node.setOnMouseExited(e -> scheduleHide());
     }
 

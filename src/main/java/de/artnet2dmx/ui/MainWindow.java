@@ -42,6 +42,10 @@ public class MainWindow extends StackPane {
     private Label lblFps;
     private Label lblTotal;
     private Label lblDriver;
+    private Label lblInTitle;
+    private Label lblPaketeHdr;
+    private Label lblOutTitle;
+    private Label lblTreiberHdr;
 
     // Controls
     private ComboBox<String> cbDriver;
@@ -49,6 +53,12 @@ public class MainWindow extends StackPane {
     private Spinner<Integer> spUniverse;
     private Spinner<Integer> spFps;
     private MaterialButton btnAction;
+    private Label lblDrvBox;
+    private Label lblPortBox;
+    private Label lblUniBox;
+    private Label lblFpsBox;
+    private Label lblActionBox;
+    private MaterialButton btnScan;
 
     // Visualizer, Charts & Status
     private MetricHistoryChart chartPps;
@@ -66,7 +76,7 @@ public class MainWindow extends StackPane {
     public MainWindow() {
         this.config = ConfigManager.loadConfig();
         I18n.setLanguage(config.getLanguage());
-        I18n.addListener(lang -> Platform.runLater(this::updateTexts));
+        I18n.addListener(lang -> Platform.runLater(this::updateAllLocalizedTexts));
 
         contentBox.setStyle("-fx-background-color: " + MaterialTheme.HEX_BG + ";");
         contentBox.setSpacing(0);
@@ -193,7 +203,7 @@ public class MainWindow extends StackPane {
 
         logoBox.getChildren().addAll(iconLogo, title, versionBadge);
         logoBox.setOnMouseClicked(e -> AboutUpdateDialog.show(MainWindow.this));
-        MaterialTooltip.install(logoBox, "artnet2dmx", I18n.get("tooltip.logo"));
+        MaterialTooltip.install(logoBox, () -> "artnet2dmx", () -> I18n.get("tooltip.logo"));
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -239,7 +249,7 @@ public class MainWindow extends StackPane {
         HBox hdrIn = new HBox(4);
         hdrIn.setAlignment(Pos.CENTER_LEFT);
         LucideIcon iconIn = new LucideIcon("activity", 12, MaterialTheme.COLOR_PRIMARY);
-        Label lblInTitle = new Label("EINGANG");
+        lblInTitle = new Label(I18n.get("metric.input"));
         lblInTitle.setTextFill(MaterialTheme.COLOR_TEXT_MED);
         lblInTitle.setFont(Font.font("Segoe UI", FontWeight.BOLD, 10));
         hdrIn.getChildren().addAll(iconIn, lblInTitle);
@@ -250,7 +260,7 @@ public class MainWindow extends StackPane {
 
         // Pakete
         VBox colPakete = new VBox(1);
-        Label lblPaketeHdr = new Label("PAKETE");
+        lblPaketeHdr = new Label(I18n.get("metric.packets"));
         lblPaketeHdr.setTextFill(MaterialTheme.COLOR_TEXT_MED);
         lblPaketeHdr.setFont(Font.font("Segoe UI", FontWeight.BOLD, 10));
 
@@ -260,7 +270,7 @@ public class MainWindow extends StackPane {
 
         inputLabels.getChildren().addAll(colInRate, colPakete);
 
-        chartPps = new MetricHistoryChart("EINGANG (PKT/S)", MaterialTheme.COLOR_PRIMARY, 50.0);
+        chartPps = new MetricHistoryChart(I18n.get("metric.chart_in"), MaterialTheme.COLOR_PRIMARY, 50.0);
         HBox.setHgrow(chartPps, Priority.ALWAYS);
 
         inputSection.getChildren().addAll(inputLabels, chartPps);
@@ -288,7 +298,7 @@ public class MainWindow extends StackPane {
         HBox hdrOut = new HBox(4);
         hdrOut.setAlignment(Pos.CENTER_LEFT);
         LucideIcon iconOut = new LucideIcon("trending-up", 12, Color.web("#00E676"));
-        Label lblOutTitle = new Label("AUSGANG");
+        lblOutTitle = new Label(I18n.get("metric.output"));
         lblOutTitle.setTextFill(MaterialTheme.COLOR_TEXT_MED);
         lblOutTitle.setFont(Font.font("Segoe UI", FontWeight.BOLD, 10));
         hdrOut.getChildren().addAll(iconOut, lblOutTitle);
@@ -299,7 +309,7 @@ public class MainWindow extends StackPane {
 
         // Treiber
         VBox colTreiber = new VBox(1);
-        Label lblTreiberHdr = new Label("TREIBER");
+        lblTreiberHdr = new Label(I18n.get("metric.driver"));
         lblTreiberHdr.setTextFill(MaterialTheme.COLOR_TEXT_MED);
         lblTreiberHdr.setFont(Font.font("Segoe UI", FontWeight.BOLD, 10));
 
@@ -309,7 +319,7 @@ public class MainWindow extends StackPane {
 
         outputLabels.getChildren().addAll(colOutRate, colTreiber);
 
-        chartFps = new MetricHistoryChart("AUSGANG (FPS)", Color.web("#00E676"), 45.0);
+        chartFps = new MetricHistoryChart(I18n.get("metric.chart_out"), Color.web("#00E676"), 45.0);
         HBox.setHgrow(chartFps, Priority.ALWAYS);
 
         outputSection.getChildren().addAll(outputLabels, chartFps);
@@ -331,8 +341,10 @@ public class MainWindow extends StackPane {
         card.setFillHeight(true);
 
         // 1. Treiber Box
-        VBox boxDrv = createControlBox("TREIBER", "DMX-Ausgabetreiber",
-            "Wählt die Schnittstelle zum DMX-Interface:\n\n• jna-ftdi: Nativer Java-Treiber via JNA/libusb (100% ohne Python!)\n• pyftdi: Python-Hardwaretreiber via libusb (Referenz aus old_artnet2dmx)\n• serial: Virtueller COM-Port /dev/ttyUSB0\n• enttec-pro: Für Enttec DMX USB Pro kompatible Adapter\n• dummy: Simulation ohne Hardware");
+        VBox boxDrv = createControlBox(() -> I18n.get("ctrl.driver"),
+            () -> I18n.get("ctrl.driver.tt_title"),
+            () -> I18n.get("ctrl.driver.tt_desc"));
+        lblDrvBox = (Label) ((HBox) boxDrv.getChildren().get(0)).getChildren().get(0);
         boxDrv.setMinWidth(130);
         cbDriver = new ComboBox<>();
         cbDriver.getItems().addAll("jna-ftdi", "pyftdi", "serial", "enttec-pro", "dummy");
@@ -341,8 +353,10 @@ public class MainWindow extends StackPane {
         boxDrv.getChildren().add(cbDriver);
 
         // 2. Port / Adapter Box (Expandierend)
-        VBox boxPort = createControlBox("PORT / ADAPTER", "Port / Adapter-Adresse",
-            "Gibt den Gerätepfad an:\n\n• Auto-Detect: Erkennt DMX-Adapter automatisch\n• Scan: Durchsucht USB-Anschlüsse nach DMX-Hardware\n• Manuelle Eingabe: z. B. /dev/ttyUSB0 oder COM3");
+        VBox boxPort = createControlBox(() -> I18n.get("ctrl.port"),
+            () -> I18n.get("ctrl.port.tt_title"),
+            () -> I18n.get("ctrl.port.tt_desc"));
+        lblPortBox = (Label) ((HBox) boxPort.getChildren().get(0)).getChildren().get(0);
         HBox.setHgrow(boxPort, Priority.ALWAYS);
 
         HBox rowPort = new HBox(6);
@@ -350,14 +364,16 @@ public class MainWindow extends StackPane {
         txtPort = new TextField(config.getPort() != null ? config.getPort() : "Auto-Detect");
         HBox.setHgrow(txtPort, Priority.ALWAYS);
 
-        MaterialButton btnScan = new MaterialButton("Scan", "refresh-cw", 
+        btnScan = new MaterialButton(I18n.get("btn.scan"), "refresh-cw", 
             MaterialTheme.COLOR_SURFACE_4DP, MaterialTheme.COLOR_TEXT_HIGH, 12, 10, 4, 11, true, this::scanPorts);
         rowPort.getChildren().addAll(txtPort, btnScan);
         boxPort.getChildren().add(rowPort);
 
         // 3. Universum Box
-        VBox boxUni = createControlBox("UNIVERSUM", "Art-Net Universum",
-            "Filtert eingehende Art-Net DMX512-Pakete:\n\n• 0: Erstes Standard-Universum (z. B. QLC+, SoundSwitch)\n• 0 bis 15: Spezifisches Universum abhören\n• -1: Alle eingehenden Universen verarbeiten");
+        VBox boxUni = createControlBox(() -> I18n.get("ctrl.universe"),
+            () -> I18n.get("ctrl.universe.tt_title"),
+            () -> I18n.get("ctrl.universe.tt_desc"));
+        lblUniBox = (Label) ((HBox) boxUni.getChildren().get(0)).getChildren().get(0);
         boxUni.setMinWidth(100);
         spUniverse = new Spinner<>(-1, 15, config.getUniverse());
         spUniverse.setEditable(true);
@@ -365,8 +381,10 @@ public class MainWindow extends StackPane {
         boxUni.getChildren().add(spUniverse);
 
         // 4. FPS Box
-        VBox boxFps = createControlBox("ZIEL-FPS", "DMX512 Bildwiederholrate",
-            "Wiederholrate der DMX512-Frames an die Scheinwerfer:\n\n• 35 Hz: Empfohlener Standardwert (flüssig für Moving Heads)\n• 10–44 Hz: Nach DMX512-Norm\n• Kontinuierlicher Puffer verhindert Scheinwerfer-Blackouts");
+        VBox boxFps = createControlBox(() -> I18n.get("ctrl.fps"),
+            () -> I18n.get("ctrl.fps.tt_title"),
+            () -> I18n.get("ctrl.fps.tt_desc"));
+        lblFpsBox = (Label) ((HBox) boxFps.getChildren().get(0)).getChildren().get(0);
         boxFps.setMinWidth(90);
         spFps = new Spinner<>(10, 44, config.getFps());
         spFps.setEditable(true);
@@ -374,8 +392,10 @@ public class MainWindow extends StackPane {
         boxFps.getChildren().add(spFps);
 
         // 5. Start/Stop Action Box
-        VBox boxAction = createControlBox("AKTION", "Bridge-Aktivierung",
-            "Startet oder stoppt den DMX-Ausgabedienst:\n\n• Start: Verbindet mit DMX-Adapter und leitet Art-Net live weiter\n• Stop: Hält DMX-Ausgabe an und trennt die Schnittstelle sicher");
+        VBox boxAction = createControlBox(() -> I18n.get("ctrl.action"),
+            () -> I18n.get("ctrl.action.tt_title"),
+            () -> I18n.get("ctrl.action.tt_desc"));
+        lblActionBox = (Label) ((HBox) boxAction.getChildren().get(0)).getChildren().get(0);
         boxAction.setMinWidth(110);
         btnAction = new MaterialButton(I18n.get("btn.start"), "play", 
             MaterialTheme.COLOR_PRIMARY, MaterialTheme.COLOR_ON_PRIMARY, 15, 16, 4, 12, true, this::toggleService);
@@ -387,7 +407,9 @@ public class MainWindow extends StackPane {
         return card;
     }
 
-    private VBox createControlBox(String title, String tooltipTitle, String tooltipText) {
+    private VBox createControlBox(java.util.function.Supplier<String> titleSupplier,
+                                  java.util.function.Supplier<String> tooltipTitleSupplier,
+                                  java.util.function.Supplier<String> tooltipTextSupplier) {
         VBox box = new VBox(5);
         box.setPadding(new Insets(6, 10, 8, 10));
         box.setStyle("-fx-background-color: " + MaterialTheme.HEX_SURFACE_2DP + 
@@ -397,14 +419,14 @@ public class MainWindow extends StackPane {
         HBox hdr = new HBox();
         hdr.setAlignment(Pos.CENTER_LEFT);
 
-        Label lbl = new Label(title);
+        Label lbl = new Label(titleSupplier.get());
         lbl.setTextFill(MaterialTheme.COLOR_TEXT_MED);
         lbl.setFont(Font.font("Segoe UI", FontWeight.BOLD, 10));
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HelpBadge help = new HelpBadge(tooltipTitle, tooltipText);
+        HelpBadge help = new HelpBadge(tooltipTitleSupplier, tooltipTextSupplier);
         hdr.getChildren().addAll(lbl, spacer, help);
 
         box.getChildren().add(hdr);
@@ -423,7 +445,7 @@ public class MainWindow extends StackPane {
         bar.setAlignment(Pos.CENTER_LEFT);
         bar.setPadding(new Insets(4, 16, 6, 16));
 
-        statusLabel = new Label("Bereit. Klicken Sie auf Start.");
+        statusLabel = new Label(I18n.get("status.ready_hint"));
         statusLabel.setTextFill(MaterialTheme.COLOR_TEXT_MED);
         statusLabel.setFont(Font.font("Segoe UI", 11));
 
@@ -434,7 +456,7 @@ public class MainWindow extends StackPane {
     private void scanPorts() {
         List<SerialOpenDmxSender.PortInfo> ports = SerialOpenDmxSender.listAvailablePorts();
         if (ports.isEmpty()) {
-            statusLabel.setText("Keine seriellen Anschlüsse gefunden.");
+            statusLabel.setText(I18n.get("status.no_ports"));
             return;
         }
 
@@ -444,7 +466,7 @@ public class MainWindow extends StackPane {
                 .orElse(ports.get(0));
 
         txtPort.setText(match.systemPortName());
-        statusLabel.setText("Adapter gewählt: " + match.systemPortName() + " (" + match.descriptivePortName() + ")");
+        statusLabel.setText(I18n.get("status.port_selected", match.systemPortName(), match.descriptivePortName()));
     }
 
     public void toggleService() {
@@ -472,11 +494,12 @@ public class MainWindow extends StackPane {
             chipLabel.setText(I18n.get("status.active"));
             chipLabel.setTextFill(MaterialTheme.COLOR_PRIMARY);
             lblDriver.setText(config.getDriver());
-            statusLabel.setText("Lauscht auf UDP " + config.getUdpPort() + " | Universum: " + 
-                (config.getUniverse() == -1 ? "Alle" : config.getUniverse()) + " | Ausgabe: " + bridgeService.getSenderName());
+            statusLabel.setText(I18n.get("status.listening", config.getUdpPort(), 
+                (config.getUniverse() == -1 ? I18n.get("status.all_universes") : String.valueOf(config.getUniverse())), 
+                bridgeService.getSenderName()));
         } catch (Exception e) {
             LOGGER.severe("Fehler beim Starten der DMX-Bridge: " + e.getMessage());
-            statusLabel.setText("Fehler beim Start: " + e.getMessage());
+            statusLabel.setText(I18n.get("status.error_start", e.getMessage()));
             stopService();
         }
     }
@@ -496,7 +519,7 @@ public class MainWindow extends StackPane {
         lblFps.setText("0.0 fps");
         lblTotal.setText("0");
         lblDriver.setText(config.getDriver() != null ? config.getDriver() : "jna-ftdi");
-        statusLabel.setText("Bridge gestoppt.");
+        statusLabel.setText(I18n.get("status.bridge_stopped"));
 
         visualizer.reset();
         if (chartPps != null) {
@@ -542,14 +565,14 @@ public class MainWindow extends StackPane {
             }
 
             if (total == 0) {
-                statusLabel.setText(String.format(
-                    "Warte auf Art-Net Pakete auf Port %d (Filter: Universum %s) -> DMX: %s",
-                    config.getUdpPort(), (config.getUniverse() == -1 ? "Alle (-1)" : String.valueOf(config.getUniverse())),
+                statusLabel.setText(I18n.get(
+                    "status.waiting",
+                    config.getUdpPort(), (config.getUniverse() == -1 ? I18n.get("status.all_universes") + " (-1)" : String.valueOf(config.getUniverse())),
                     bridgeService.getSenderName()
                 ));
             } else {
-                statusLabel.setText(String.format(
-                    "Art-Net aktiv (%.1f pkt/s) | DMX: %s (%.1f fps, %,d Frames)",
+                statusLabel.setText(I18n.get(
+                    "status.active_live",
                     pps,
                     bridgeService.getSenderName(),
                     fps,
@@ -559,7 +582,7 @@ public class MainWindow extends StackPane {
         }
     }
 
-    private void updateTexts() {
+    public void updateAllLocalizedTexts() {
         if (chipLabel != null) {
             chipLabel.setText(isRunning ? I18n.get("status.active") : I18n.get("status.ready"));
         }
@@ -569,6 +592,26 @@ public class MainWindow extends StackPane {
             } else {
                 btnAction.setState(I18n.get("btn.start"), "play", MaterialTheme.COLOR_PRIMARY, MaterialTheme.COLOR_ON_PRIMARY);
             }
+        }
+        if (lblInTitle != null) lblInTitle.setText(I18n.get("metric.input"));
+        if (lblPaketeHdr != null) lblPaketeHdr.setText(I18n.get("metric.packets"));
+        if (lblOutTitle != null) lblOutTitle.setText(I18n.get("metric.output"));
+        if (lblTreiberHdr != null) lblTreiberHdr.setText(I18n.get("metric.driver"));
+
+        if (chartPps != null) chartPps.setTitle(I18n.get("metric.chart_in"));
+        if (chartFps != null) chartFps.setTitle(I18n.get("metric.chart_out"));
+
+        if (lblDrvBox != null) lblDrvBox.setText(I18n.get("ctrl.driver"));
+        if (lblPortBox != null) lblPortBox.setText(I18n.get("ctrl.port"));
+        if (lblUniBox != null) lblUniBox.setText(I18n.get("ctrl.universe"));
+        if (lblFpsBox != null) lblFpsBox.setText(I18n.get("ctrl.fps"));
+        if (lblActionBox != null) lblActionBox.setText(I18n.get("ctrl.action"));
+
+        if (btnScan != null) btnScan.setText(I18n.get("btn.scan"));
+        if (visualizer != null) visualizer.updateLocalizedTexts();
+
+        if (!isRunning && statusLabel != null) {
+            statusLabel.setText(I18n.get("status.ready_hint"));
         }
     }
 }

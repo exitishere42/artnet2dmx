@@ -67,6 +67,10 @@ public class MaterialButton extends HBox {
         this.onAction = onAction;
     }
 
+    public void setText(String text) {
+        this.label.setText(text);
+    }
+
     public void setState(String text, String iconName, Color bg, Color fg) {
         this.bgNormal = bg;
         this.fgColor = fg;

@@ -40,6 +40,9 @@ public class ChannelVisualizer extends VBox {
     private final ScrollBar scrollBar;
     private final int[] prevChannels = new int[TOTAL_CHANNELS];
 
+    private Label titleLabel;
+    private Label lblBereich;
+
     private double channelWidth = 25.0;
     private double barWidth = 19.0;
     private double scrollOffsetChannels = 0.0;
@@ -61,9 +64,9 @@ public class ChannelVisualizer extends VBox {
         header.setPadding(new Insets(0, 0, 8, 0));
 
         LucideIcon iconSliders = new LucideIcon("sliders", 14, MaterialTheme.COLOR_TEXT_MED);
-        Label title = new Label("DMX512 KANÄLE (1 - 512)");
-        title.setTextFill(MaterialTheme.COLOR_TEXT_MED);
-        title.setFont(Font.font("Segoe UI", FontWeight.BOLD, 11));
+        titleLabel = new Label(de.artnet2dmx.util.I18n.get("vis.title"));
+        titleLabel.setTextFill(MaterialTheme.COLOR_TEXT_MED);
+        titleLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 11));
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -71,7 +74,7 @@ public class ChannelVisualizer extends VBox {
         HBox jumpBox = new HBox(4);
         jumpBox.setAlignment(Pos.CENTER_RIGHT);
 
-        Label lblBereich = new Label("Bereich:");
+        lblBereich = new Label(de.artnet2dmx.util.I18n.get("vis.range"));
         lblBereich.setTextFill(MaterialTheme.COLOR_TEXT_DISABLED);
         lblBereich.setFont(Font.font("Segoe UI", 10));
         jumpBox.getChildren().add(lblBereich);
@@ -94,7 +97,7 @@ public class ChannelVisualizer extends VBox {
             jumpBox.getChildren().add(btnJump);
         }
 
-        header.getChildren().addAll(iconSliders, title, spacer, jumpBox);
+        header.getChildren().addAll(iconSliders, titleLabel, spacer, jumpBox);
 
         // Canvas & Entkoppelter Container
         canvas = new Canvas(800, 160);
@@ -220,6 +223,15 @@ public class ChannelVisualizer extends VBox {
             gc.setFont(Font.font("Segoe UI", 8));
             gc.setFill(MaterialTheme.COLOR_TEXT_DISABLED);
             gc.fillText(String.valueOf(ch + 1), colCenterX, h - 8);
+        }
+    }
+
+    public void updateLocalizedTexts() {
+        if (titleLabel != null) {
+            titleLabel.setText(de.artnet2dmx.util.I18n.get("vis.title"));
+        }
+        if (lblBereich != null) {
+            lblBereich.setText(de.artnet2dmx.util.I18n.get("vis.range"));
         }
     }
 

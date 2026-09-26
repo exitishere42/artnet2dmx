@@ -32,7 +32,7 @@ public class MetricHistoryChart extends Pane {
 
     private final double[] history = new double[HISTORY_SECONDS];
     private int samplesCount = 0;
-    private final String title;
+    private String title;
     private final Color lineColor;
     private final double defaultMax;
 
@@ -55,6 +55,11 @@ public class MetricHistoryChart extends Pane {
         setPrefWidth(260);
         setMaxWidth(Double.MAX_VALUE);
 
+        render();
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
         render();
     }
 

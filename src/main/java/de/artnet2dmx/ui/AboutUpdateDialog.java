@@ -317,6 +317,27 @@ public class AboutUpdateDialog {
                       "; -fx-border-color: " + MaterialTheme.HEX_DIVIDER + 
                       "; -fx-border-width: 1px; -fx-background-radius: 4px; -fx-border-radius: 4px;");
 
+        // 2. Autostart
+        VBox autostartBox = new VBox(6);
+        CheckBox chkAutostart = new CheckBox(I18n.get("settings.autostart"));
+        chkAutostart.setSelected(config.isAutostart());
+        chkAutostart.setStyle("-fx-text-fill: " + MaterialTheme.HEX_TEXT_HIGH + "; -fx-font-size: 12px;");
+        chkAutostart.setOnAction(e -> {
+            config.setAutostart(chkAutostart.isSelected());
+            ConfigManager.saveConfig(config);
+        });
+        autostartBox.getChildren().add(chkAutostart);
+
+        // 3. Info / Speicher-Hinweis
+        HBox noteRow = new HBox(6);
+        noteRow.setAlignment(Pos.CENTER_LEFT);
+        noteRow.setPadding(new Insets(4, 0, 0, 0));
+        LucideIcon iconOk = new LucideIcon("check-circle", 12, MaterialTheme.COLOR_PRIMARY);
+        Label lblNote = new Label(I18n.get("settings.saved"));
+        lblNote.setTextFill(MaterialTheme.COLOR_TEXT_MED);
+        lblNote.setFont(Font.font(MaterialTheme.FONT_FAMILY, 10));
+        noteRow.getChildren().addAll(iconOk, lblNote);
+
         // 1. Sprache / Language
         VBox langBox = new VBox(6);
         Label lblLang = new Label(I18n.get("settings.language"));
@@ -344,29 +365,15 @@ public class AboutUpdateDialog {
             btnTabSettings.setText(I18n.get("tab.settings"));
             lblCurTitle.setText(I18n.get("dialog.installed"));
             lblLatTitle.setText(I18n.get("dialog.latest"));
+            chkAutostart.setText(I18n.get("settings.autostart"));
+            lblNote.setText(I18n.get("settings.saved"));
+
+            // Hauptfenster ebenfalls direkt dynamisch lokalisieren
+            if (mainWindow != null) {
+                mainWindow.updateAllLocalizedTexts();
+            }
         });
         langBox.getChildren().addAll(lblLang, cbLang);
-
-        // 2. Autostart
-        VBox autostartBox = new VBox(6);
-        CheckBox chkAutostart = new CheckBox(I18n.get("settings.autostart"));
-        chkAutostart.setSelected(config.isAutostart());
-        chkAutostart.setStyle("-fx-text-fill: " + MaterialTheme.HEX_TEXT_HIGH + "; -fx-font-size: 12px;");
-        chkAutostart.setOnAction(e -> {
-            config.setAutostart(chkAutostart.isSelected());
-            ConfigManager.saveConfig(config);
-        });
-        autostartBox.getChildren().add(chkAutostart);
-
-        // 3. Info / Speicher-Hinweis
-        HBox noteRow = new HBox(6);
-        noteRow.setAlignment(Pos.CENTER_LEFT);
-        noteRow.setPadding(new Insets(4, 0, 0, 0));
-        LucideIcon iconOk = new LucideIcon("check-circle", 12, MaterialTheme.COLOR_PRIMARY);
-        Label lblNote = new Label(I18n.get("settings.saved"));
-        lblNote.setTextFill(MaterialTheme.COLOR_TEXT_MED);
-        lblNote.setFont(Font.font(MaterialTheme.FONT_FAMILY, 10));
-        noteRow.getChildren().addAll(iconOk, lblNote);
 
         card.getChildren().addAll(langBox, autostartBox, noteRow);
         return card;
