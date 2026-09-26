@@ -3,12 +3,13 @@
 <img src="artnet2dmx.png" alt="artnet2dmx Logo" width="128" height="128" />
 
 ```text
-                               _              _   ____      _               
-                    __ _ _ __| |_ _ __   ___| |_|___ \  __| |_ __ _____  __
-                   / _` | '__| __| '_ \ / _ \ __| __) |/ _` | '_ ` _ \ \/ /
-                  | (_| | |  | |_| | | |  __/ |_ / __/| (_| | | | | | >  < 
-                   \__,_|_|   \__|_| |_|\___|\__|_____|\__,_|_| |_| |_/_/\_\
-                                                                            
+               _              _   ____      _               
+    __ _ _ __| |_ _ __   ___| |_|___ \  __| |_ __ _____  __
+   / _` | '__| __| '_ \ / _ \ __| __) |/ _` | '_ ` _ \ \/ /
+  | (_| | |  | |_| | | |  __/ |_ / __/| (_| | | | | | >  < 
+   \__,_|_|   \__|_| |_|\___|\__|_____|\__,_|_| |_| |_/_/\_\
+                                                            
+         [ ART-NET 4 TO USB-DMX512 HARDWARE BRIDGE ]
 ```
 
 **High-Performance Real-Time Art-Net 4 to USB-DMX512 Hardware Bridge & Live Visualizer built with Java 21 LTS & JavaFX 21**
@@ -76,26 +77,39 @@ Visually and structurally, **artnet2dmx** features a clean Material Design 2 Dar
 
 ---
 
-## Build & Run
+## Installation & Quick Start (GitHub Release)
 
-### Requirements
-- **Java 21 LTS** or newer
-- **Apache Maven 3.8+**
+### 1. Automatic Installer (Recommended)
+Download [`install.sh`](https://github.com/exitishere42/artnet2dmx/releases/latest/download/install.sh) (Linux) or [`install.bat`](https://github.com/exitishere42/artnet2dmx/releases/latest/download/install.bat) (Windows) from the [**Releases**](https://github.com/exitishere42/artnet2dmx/releases/latest) page:
+- Automatically installs the application into `~/artnet2dmx` (e.g., `/home/regie/artnet2dmx` on Linux or `%USERPROFILE%\artnet2dmx` on Windows).
+- Checks if **Java 21+** is already installed — skips installation if present, or automatically installs the latest OpenJDK 21 LTS if missing.
+- Creates a **Desktop Entry / Start Menu App** with the **artnet2dmx** logo so you can launch it directly from your application dash.
 
-### Run Application (GUI)
-On Linux (AppImage):
+**Linux One-Line Install:**
+```bash
+curl -fsSL https://github.com/exitishere42/artnet2dmx/releases/latest/download/install.sh | bash
+```
+
+**Windows Install:**
+Download and run `install.bat` from the [latest release](https://github.com/exitishere42/artnet2dmx/releases/latest).
+
+### 2. Standalone Linux AppImage
+Download [`artnet2dmx-x86_64.AppImage`](https://github.com/exitishere42/artnet2dmx/releases/latest/download/artnet2dmx-x86_64.AppImage) from the [latest release](https://github.com/exitishere42/artnet2dmx/releases/latest):
 ```bash
 chmod +x artnet2dmx-x86_64.AppImage
 ./artnet2dmx-x86_64.AppImage
 ```
 
-On Linux (Shell Launcher):
-```bash
-chmod +x run.sh
-./run.sh
-```
+---
 
-On Windows (Batch Launcher):
+## Build from Source
+
+### Requirements
+- **Java 21 LTS** or newer
+- **Apache Maven 3.8+**
+
+### Run Application (Development)
+On Windows (batch launcher):
 ```cmd
 run.bat
 ```
