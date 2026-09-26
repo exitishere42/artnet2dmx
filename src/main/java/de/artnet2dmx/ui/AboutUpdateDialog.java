@@ -47,15 +47,9 @@ public class AboutUpdateDialog {
 
         LucideIcon iconLogo = new LucideIcon("sliders", 22, MaterialTheme.COLOR_PRIMARY);
 
-        VBox titleBox = new VBox(1);
         Label lblTitle = new Label("artnet2dmx");
         lblTitle.setTextFill(MaterialTheme.COLOR_TEXT_HIGH);
         lblTitle.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));
-
-        Label lblSub = new Label("Art-Net 4 zu DMX512 Hardware Bridge");
-        lblSub.setTextFill(MaterialTheme.COLOR_TEXT_MED);
-        lblSub.setFont(Font.font("Segoe UI", 11));
-        titleBox.getChildren().addAll(lblTitle, lblSub);
 
         Region headerSpacer = new Region();
         HBox.setHgrow(headerSpacer, Priority.ALWAYS);
@@ -72,7 +66,7 @@ public class AboutUpdateDialog {
         btnCloseTop.getChildren().add(iconClose);
         btnCloseTop.setOnMouseClicked(e -> mainWindow.hideOverlay());
 
-        header.getChildren().addAll(iconLogo, titleBox, headerSpacer, btnCloseTop);
+        header.getChildren().addAll(iconLogo, lblTitle, headerSpacer, btnCloseTop);
 
         // 2. Versions-Box
         HBox versionCard = new HBox(16);
