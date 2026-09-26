@@ -79,7 +79,7 @@ public class MainWindow extends VBox {
         // Die 3 anpassbaren Module mit minimalem und maximalem Höhen-Limit
         // Obere Lücke zur Logobar entspricht exakt der 12px Trenner-Lücke der Pille:
         VBox wrapMetrics = wrapSplitItem(metricsNode, new Insets(12, 16, 5, 16), 72, 350);
-        VBox wrapControls = wrapSplitItem(controlsNode, new Insets(5, 16, 5, 16), 68, 160);
+        VBox wrapControls = wrapSplitItem(controlsNode, new Insets(5, 16, 5, 16), 88, 170);
         VBox wrapChannels = wrapSplitItem(channelsNode, new Insets(5, 16, 8, 16), 140, Double.MAX_VALUE);
 
         splitPane.getItems().addAll(wrapMetrics, wrapControls, wrapChannels);
@@ -87,7 +87,7 @@ public class MainWindow extends VBox {
         SplitPane.setResizableWithParent(wrapControls, false);
         SplitPane.setResizableWithParent(wrapChannels, true);
 
-        Platform.runLater(() -> splitPane.setDividerPositions(0.22, 0.38));
+        Platform.runLater(() -> splitPane.setDividerPositions(0.22, 0.405));
 
         getChildren().add(splitPane);
         buildStatusBar();
@@ -255,13 +255,13 @@ public class MainWindow extends VBox {
     private Region buildControlsCard() {
         HBox card = new HBox(10);
         card.setAlignment(Pos.CENTER_LEFT);
-        card.setPadding(new Insets(8, 12, 8, 12));
+        card.setPadding(new Insets(10, 12, 10, 12));
         card.setStyle("-fx-background-color: " + MaterialTheme.HEX_SURFACE_1DP + 
                      "; -fx-border-color: " + MaterialTheme.HEX_DIVIDER + 
                      "; -fx-border-width: 1px; -fx-background-radius: 4px; -fx-border-radius: 4px;");
-        card.setMinHeight(65);
-        card.setPrefHeight(78);
-        card.setMaxHeight(160);
+        card.setMinHeight(88);
+        card.setPrefHeight(92);
+        card.setMaxHeight(170);
         card.setFillHeight(true);
 
         // 1. Treiber Box
