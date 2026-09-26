@@ -100,6 +100,17 @@ chmod +x artnet2dmx-x86_64.AppImage
 ./artnet2dmx-x86_64.AppImage
 ```
 
+### 3. Uninstallation (`uninstall.sh` / `uninstall.bat`)
+To completely remove `~/artnet2dmx`, all icons, and the Desktop Entry / Start Menu shortcuts:
+
+**Linux One-Line Uninstall:**
+```bash
+curl -fsSL https://github.com/exitishere42/artnet2dmx/releases/latest/download/uninstall.sh | bash
+```
+
+**Windows Uninstall:**
+Download and run [`uninstall.bat`](https://github.com/exitishere42/artnet2dmx/releases/latest/download/uninstall.bat) (or run `%USERPROFILE%\artnet2dmx\uninstall.bat`).
+
 ---
 
 ## Build from Source

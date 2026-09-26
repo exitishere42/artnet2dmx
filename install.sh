@@ -89,12 +89,16 @@ download_file "$RELEASE_BASE_URL/$APPIMAGE_NAME" "$INSTALL_DIR/$APPIMAGE_NAME" |
 download_file "$RAW_BASE_URL/artnet2dmx.png" "$INSTALL_DIR/artnet2dmx.png"
 download_file "$RAW_BASE_URL/artnet2dmx.svg" "$INSTALL_DIR/artnet2dmx.svg"
 download_file "$RAW_BASE_URL/pyftdi_worker.py" "$INSTALL_DIR/pyftdi_worker.py" || true
+download_file "$RAW_BASE_URL/uninstall.sh" "$INSTALL_DIR/uninstall.sh" || true
 
 if [ -f "$INSTALL_DIR/$APPIMAGE_NAME" ]; then
     chmod +x "$INSTALL_DIR/$APPIMAGE_NAME"
 fi
 if [ -f "$INSTALL_DIR/pyftdi_worker.py" ]; then
     chmod +x "$INSTALL_DIR/pyftdi_worker.py"
+fi
+if [ -f "$INSTALL_DIR/uninstall.sh" ]; then
+    chmod +x "$INSTALL_DIR/uninstall.sh"
 fi
 
 # Startskript run.sh im Zielordner erzeugen
