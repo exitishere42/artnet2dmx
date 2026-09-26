@@ -60,11 +60,19 @@ public class AboutUpdateDialog {
         Region headerSpacer = new Region();
         HBox.setHgrow(headerSpacer, Priority.ALWAYS);
 
-        LucideIcon iconClose = new LucideIcon("x", 16, MaterialTheme.COLOR_TEXT_MED);
-        iconClose.setCursor(Cursor.HAND);
-        iconClose.setOnMouseClicked(e -> mainWindow.hideOverlay());
+        HBox btnCloseTop = new HBox();
+        btnCloseTop.setAlignment(Pos.CENTER);
+        btnCloseTop.setPadding(new Insets(4, 6, 4, 6));
+        btnCloseTop.setCursor(Cursor.HAND);
+        btnCloseTop.setStyle("-fx-background-radius: 4px; -fx-background-color: transparent;");
+        btnCloseTop.setOnMouseEntered(e -> btnCloseTop.setStyle("-fx-background-radius: 4px; -fx-background-color: " + MaterialTheme.HEX_SURFACE_4DP + ";"));
+        btnCloseTop.setOnMouseExited(e -> btnCloseTop.setStyle("-fx-background-radius: 4px; -fx-background-color: transparent;"));
 
-        header.getChildren().addAll(iconLogo, titleBox, headerSpacer, iconClose);
+        LucideIcon iconClose = new LucideIcon("x", 16, MaterialTheme.COLOR_TEXT_MED);
+        btnCloseTop.getChildren().add(iconClose);
+        btnCloseTop.setOnMouseClicked(e -> mainWindow.hideOverlay());
+
+        header.getChildren().addAll(iconLogo, titleBox, headerSpacer, btnCloseTop);
 
         // 2. Versions-Box
         HBox versionCard = new HBox(16);
@@ -145,7 +153,7 @@ public class AboutUpdateDialog {
         actionContent.getChildren().addAll(txtNotes, progressBar, lblProgressDetail, buttonBox);
         statusCard.getChildren().addAll(statusRow, actionContent);
 
-        // 4. Footer (GitHub Link & Schließen)
+        // 4. Footer (GitHub Link)
         HBox footer = new HBox(10);
         footer.setAlignment(Pos.CENTER_LEFT);
 
@@ -160,13 +168,7 @@ public class AboutUpdateDialog {
             }
         });
 
-        Region footerSpacer = new Region();
-        HBox.setHgrow(footerSpacer, Priority.ALWAYS);
-
-        MaterialButton btnClose = new MaterialButton("Schließen", "x",
-                MaterialTheme.COLOR_SURFACE_4DP, MaterialTheme.COLOR_TEXT_HIGH, 12, 12, 4, 11, false, mainWindow::hideOverlay);
-
-        footer.getChildren().addAll(btnGithub, footerSpacer, btnClose);
+        footer.getChildren().add(btnGithub);
 
         card.getChildren().addAll(header, versionCard, statusCard, footer);
 

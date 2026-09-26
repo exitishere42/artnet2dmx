@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 public class UpdateService {
     private static final Logger LOGGER = Logger.getLogger(UpdateService.class.getName());
 
-    public static final String CURRENT_VERSION = "1.0.2";
+    public static final String CURRENT_VERSION = "1.0.3";
     public static final String GITHUB_REPO = "exitishere42/artnet2dmx";
     public static final String API_URL = "https://api.github.com/repos/" + GITHUB_REPO + "/releases/latest";
     public static final String REPO_URL = "https://github.com/" + GITHUB_REPO;
