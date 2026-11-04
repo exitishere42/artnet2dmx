@@ -8,18 +8,22 @@ import de.artnet2dmx.ui.component.*;
 import de.artnet2dmx.ui.icon.LucideIcon;
 import de.artnet2dmx.util.I18n;
 import javafx.application.Platform;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
 /**
@@ -104,6 +108,7 @@ public class MainWindow extends StackPane {
         SplitPane.setResizableWithParent(wrapChannels, true);
 
         Platform.runLater(() -> splitPane.setDividerPositions(0.22, 0.405));
+        configureDragbarOnlyDividers(splitPane);
 
         contentBox.getChildren().add(splitPane);
         buildStatusBar();
@@ -167,6 +172,105 @@ public class MainWindow extends StackPane {
         content.setMaxHeight(Double.MAX_VALUE);
         content.setMaxWidth(Double.MAX_VALUE);
         return wrap;
+    }
+
+    private void configureDragbarOnlyDividers(SplitPane splitPane) {
+        Runnable setupDividers = () -> {
+            for (Node dividerNode : splitPane.lookupAll(".split-pane-divider")) {
+                if (dividerNode instanceof Parent divider) {
+                    if (divider.getProperties().containsKey("dragbarConfigured")) {
+                        continue;
+                    }
+                    divider.getProperties().put("dragbarConfigured", true);
+
+                    Region grabber = null;
+                    for (Node child : divider.getChildrenUnmodifiable()) {
+                        if (child.getStyleClass().contains("vertical-grabber") || child.getStyleClass().contains("grabber")) {
+                            if (child instanceof Region r) {
+                                grabber = r;
+                                break;
+                            }
+                        }
+                    }
+                    final Region targetGrabber = grabber;
+                    final AtomicBoolean dragging = new AtomicBoolean(false);
+
+                    divider.setCursor(Cursor.DEFAULT);
+
+                    divider.addEventFilter(MouseEvent.MOUSE_MOVED, e -> {
+                        boolean inside = isInsideGrabber(targetGrabber, divider, e.getX(), e.getY());
+                        divider.setCursor(inside ? Cursor.V_RESIZE : Cursor.DEFAULT);
+                        if (targetGrabber != null && !dragging.get()) {
+                            targetGrabber.setStyle(inside ? "-fx-background-color: #00E5FF;" : "-fx-background-color: #8E8E8E;");
+                        }
+                    });
+
+                    divider.addEventFilter(MouseEvent.MOUSE_EXITED, e -> {
+                        if (!dragging.get()) {
+                            divider.setCursor(Cursor.DEFAULT);
+                            if (targetGrabber != null) {
+                                targetGrabber.setStyle("-fx-background-color: #8E8E8E;");
+                            }
+                        }
+                    });
+
+                    divider.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+                        boolean inside = isInsideGrabber(targetGrabber, divider, e.getX(), e.getY());
+                        if (inside) {
+                            dragging.set(true);
+                            divider.setCursor(Cursor.V_RESIZE);
+                            if (targetGrabber != null) {
+                                targetGrabber.setStyle("-fx-background-color: #00FF9A;");
+                            }
+                        } else {
+                            dragging.set(false);
+                            e.consume();
+                        }
+                    });
+
+                    divider.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> {
+                        if (!dragging.get()) {
+                            e.consume();
+                        } else {
+                            if (targetGrabber != null) {
+                                targetGrabber.setStyle("-fx-background-color: #00FF9A;");
+                            }
+                        }
+                    });
+
+                    divider.addEventFilter(MouseEvent.MOUSE_RELEASED, e -> {
+                        dragging.set(false);
+                        boolean inside = isInsideGrabber(targetGrabber, divider, e.getX(), e.getY());
+                        divider.setCursor(inside ? Cursor.V_RESIZE : Cursor.DEFAULT);
+                        if (targetGrabber != null) {
+                            targetGrabber.setStyle(inside ? "-fx-background-color: #00E5FF;" : "-fx-background-color: #8E8E8E;");
+                        }
+                    });
+                }
+            }
+        };
+
+        setupDividers.run();
+        Platform.runLater(setupDividers);
+        splitPane.skinProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(setupDividers));
+        splitPane.needsLayoutProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(setupDividers));
+    }
+
+    private boolean isInsideGrabber(Region grabber, Parent divider, double x, double y) {
+        if (grabber != null) {
+            Bounds b = grabber.getBoundsInParent();
+            if (b != null && b.getWidth() > 0) {
+                double minX = b.getMinX() - 10;
+                double maxX = b.getMaxX() + 10;
+                return x >= minX && x <= maxX;
+            }
+        }
+        double w = divider.getBoundsInLocal().getWidth();
+        if (w > 0) {
+            double centerX = w / 2.0;
+            return x >= (centerX - 36) && x <= (centerX + 36);
+        }
+        return false;
     }
 
     public AppConfig getConfig() {

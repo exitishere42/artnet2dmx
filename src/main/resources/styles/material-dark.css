@@ -124,7 +124,7 @@
 .split-pane:vertical > .split-pane-divider {
     -fx-background-color: transparent;
     -fx-padding: 6px 0 6px 0;
-    -fx-cursor: v-resize;
+    -fx-cursor: default;
     -fx-border-color: transparent;
 }
 .split-pane:vertical > .split-pane-divider > .vertical-grabber,
@@ -139,18 +139,6 @@
     -fx-max-height: 4px;
     -fx-background-color: #8E8E8E;
     -fx-background-radius: 2px;
-}
-.split-pane:vertical > .split-pane-divider:hover > .vertical-grabber,
-.split-pane:vertical > .split-pane-divider:hover > .grabber,
-.split-pane-divider:hover .vertical-grabber,
-.split-pane-divider:hover .grabber {
-    -fx-background-color: #00E5FF;
-}
-.split-pane:vertical > .split-pane-divider:pressed > .vertical-grabber,
-.split-pane:vertical > .split-pane-divider:pressed > .grabber,
-.split-pane-divider:pressed .vertical-grabber,
-.split-pane-divider:pressed .grabber {
-    -fx-background-color: #00ff9a;
 }
 
 
